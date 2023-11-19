@@ -39,7 +39,7 @@ RUN git clone https://github.com/tpoechtrager/osxcross \
      && curl -LO https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX11.3.sdk.tar.xz \
      && mv MacOSX11.3.sdk.tar.xz osxcross/tarballs/ \
      && cd osxcross \
-     && UNATTENDED=yes OSX_VERSION_MIN=10.5 ./build.sh
+     && UNATTENDED=yes OSX_VERSION_MIN=10.6 ./build.sh
 
 ENV PATH="/osxcross/target/bin:$PATH"
 
