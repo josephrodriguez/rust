@@ -1,6 +1,10 @@
-FROM rust:1.74.0-slim-bullseye
+FROM ubuntu:latest
+
+# Install dependencies
 RUN apt update \
+    && apt-get upgrade -y \
     && apt-get install -y --no-install-recommends \
+        ca-certificates \
         bash \
         bzip2 \
         cmake \
@@ -35,12 +39,17 @@ RUN apt update \
     && apt-get autoremove --purge \
     && rm -rf /var/lib/apt/lists/*
 
+# Install Rust
+RUN curl https://sh.rustup.rs -sSf | sh -s -- -y 
+
+# Install MacOSX cross compiler
 RUN git clone https://github.com/tpoechtrager/osxcross \
-     && curl -LO https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX11.3.sdk.tar.xz \
-     && mv MacOSX11.3.sdk.tar.xz osxcross/tarballs/ \
+     && curl -LO https://github.com/joseluisq/macosx-sdks/releases/download/13.3/MacOSX13.3.sdk.tar.xz \
+     && mv MacOSX13.3.sdk.tar.xz osxcross/tarballs/ \
      && cd osxcross \
      && UNATTENDED=yes OSX_VERSION_MIN=10.12 ./build.sh
 
+ENV PATH="/root/.cargo/bin:${PATH}"
 ENV PATH="/osxcross/target/bin:$PATH"
 
-RUN ["cargo", "--help"]
+CMD ["cargo", "--version"]
